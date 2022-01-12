@@ -2,6 +2,7 @@ package xyz.springbootamigos.springwebappamigos.student;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.Period;
 
 @Entity // for Hibernate
 @Table // for database
@@ -18,23 +19,24 @@ public class Student {
     private String name;
     private String email;
     private LocalDate dateOfBirth;
+    /*Age will no longer visible in database,
+    and will be calculated from dateOfBirth - @Transient*/
+    @Transient
     private Integer age;
 
     public Student() {
     }
-
-    public Student(Long id, String name, String email,LocalDate dateOfBirth, Integer age) {
+    // Age deleted from constructor
+    public Student(Long id, String name, String email,LocalDate dateOfBirth) {
         this.id = id;
         this.name = name;
         this.email = email;
-        this.age = age;
         this.dateOfBirth = dateOfBirth;
     }
 
-    public Student(String name, String email, Integer age, LocalDate dateOfBirth) {
+    public Student(String name, String email, LocalDate dateOfBirth) {
         this.name = name;
         this.email = email;
-        this.age = age;
         this.dateOfBirth = dateOfBirth;
     }
 
@@ -63,7 +65,9 @@ public class Student {
     }
 
     public Integer getAge() {
-        return age;
+
+        // Calculate age
+        return Period.between(this.dateOfBirth, LocalDate.now()).getYears();
     }
 
     public void setAge(Integer age) {
